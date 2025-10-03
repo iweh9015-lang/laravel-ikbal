@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\MyController;
 use App\Http\Controllers\Postcontroller;
+use App\Models\Post;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -41,9 +43,9 @@ Route::get('books/{judul}', function ($a) {
     return 'Judul Buku : '.$a;
 });
 
-Route::get('post/{title}/{category}', function ($a, $b) {
-    return view('post', ['judul' => $a, 'cat' => $b]);
-});
+// Route::get('post/{title}/{category}', function ($a, $b) {
+// return view('post', ['judul' => $a, 'cat' => $b]);
+// });
 
 // optional parameter
 Route::get('profile/{name?}', function ($a = 'guest') {
@@ -105,14 +107,14 @@ Route::get('status', function () {
 // tes model
 Route::get('test-model', function () {
     // menampilkan semua data dari model post
-    $data = App\Models\Post::all();
+    $data = Post::all();
 
     return $data;
 });
 
 Route::get('create-data', function () {
     // membuat data baru melalui model
-    $data = App\Models\Post::create([
+    $data = Post::create([
         'title' => 'Belajar PHP',
         'content' => 'lorem ipsum',
     ]);
@@ -122,14 +124,14 @@ Route::get('create-data', function () {
 
 Route::get('show-data/{id}', function ($id) {
     // menampilkan 1 data berdasarkan id
-    $data = App\Models\Post::find($id);
+    $data = Post::find($id);
 
     return $data;
 });
 
 Route::get('edit-data/{id}', function ($id) {
     // mengedit data berdasarkan id
-    $data = App\Models\Post::find($id);
+    $data = Post::find($id);
     $data->title = 'Membangun Project Dengan laravel';
     $data->save();
 
@@ -138,7 +140,7 @@ Route::get('edit-data/{id}', function ($id) {
 
 Route::get('delete-data/{id}', function ($id) {
     // menghapus data berdasarkan id
-    $data = App\Models\Post::find($id);
+    $data = Post::find($id);
     $data->delete();
 
     return redirect('test-model');
@@ -146,17 +148,28 @@ Route::get('delete-data/{id}', function ($id) {
 
 Route::get('search/{cari}', function ($query) {
     // mencari data berdasarkan title yang mirip seperi (like).......
-    $data = App\Models\Post::where('title', 'like', '%'.$query.'%')->get();
+    $data = Post::where('title', 'like', '%'.$query.'%')->get();
 
     return $data;
 });
 
 // pemanggilan url menggunaka controller
 Route::get('greetings', [MyController::class, 'hello']);
+
 Route::get('student', [MyController::class, 'siswa']);
-// post
-Route::get('post', [Postcontroller::class, 'index']);
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// post
+Route::get('post', [Postcontroller::class, 'index'])->name('post.index');
+// tambah data post
+Route::get('post/create', [Postcontroller::class, 'create'])->name('post.create');
+Route::post('post', [Postcontroller::class, 'store'])->name('post.store');
+// edit data post
+Route::get('post/{id}/edit', [Postcontroller::class, 'edit'])->name('post.edit');
+Route::put('post/{id}', [Postcontroller::class, 'update'])->name('post.update');
+
+// hapus data
+Route::delete('post/{id}', [Postcontroller::class, 'destroy'])->name('post.delete');
