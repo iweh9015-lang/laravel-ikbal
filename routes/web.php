@@ -171,5 +171,19 @@ Route::post('post', [Postcontroller::class, 'store'])->name('post.store');
 Route::get('post/{id}/edit', [Postcontroller::class, 'edit'])->name('post.edit');
 Route::put('post/{id}', [Postcontroller::class, 'update'])->name('post.update');
 
+// show data
+Route::get('post/{id}', [Postcontroller::class, 'show'])->name('post.show');
+
+// produk
+Route::resource('produk', App\Http\Controllers\ProdukController::class)->middleware('auth');
+
 // hapus data
 Route::delete('post/{id}', [Postcontroller::class, 'destroy'])->name('post.delete');
+// biodata
+use App\Http\Controllers\BiodataController;
+
+Route::get('/', function () {
+    return redirect()->route('biodata.index');
+});
+
+Route::resource('biodata', BiodataController::class);

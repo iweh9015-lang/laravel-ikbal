@@ -23,9 +23,12 @@
                                         <form action="{{ Route ('post.delete', $data->id)}}" method="post">
                                             @csrf
                                             @method('DELETE')
-                                            <a href="{{ Route('post.edit', $data->id) }}" class="btn btn-sm btn-primary">
+                                            <a href="{{ Route('post.edit', $data->id) }}" class="btn btn-sm btn-success">
                                                 Edit
                                             </a> |   
+                                             <a href="{{ Route('post.show', $data->id) }}" class="btn btn-sm btn-warning">
+                                                 Show
+                                             </a> |
                                         <button type="submit"  onclick="return confirm('Apakah Anda Yakin ?')"class="btn btn-sm btn-danger">
                                             Delete
                                         </button>
