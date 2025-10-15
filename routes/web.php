@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\DosenController;
 use App\Http\Controllers\MyController;
 use App\Http\Controllers\Postcontroller;
+use App\Http\Controllers\RelasiController;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -147,8 +149,8 @@ Route::get('delete-data/{id}', function ($id) {
 });
 
 Route::get('search/{cari}', function ($query) {
-    // mencari data berdasarkan title yang mirip seperi (like).......
-    $data = Post::where('title', 'like', '%'.$query.'%')->get();
+    // mencari data berdasarkan title yang mirip seperi (lik  ).......
+    $data = Post::where('title', 'like', '%'.$query.'%')->ge();
 
     return $data;
 });
@@ -177,6 +179,14 @@ Route::get('post/{id}', [Postcontroller::class, 'show'])->name('post.show');
 // produk
 Route::resource('produk', App\Http\Controllers\ProdukController::class)->middleware('auth');
 
+// dosen CRUD
+Route::resource('dosen', DosenController::class);
+
+// hobi CRUD
+use App\Http\Controllers\HobiController;
+
+Route::resource('hobi', HobiController::class);
+
 // hapus data
 Route::delete('post/{id}', [Postcontroller::class, 'destroy'])->name('post.delete');
 // biodata
@@ -187,3 +197,25 @@ Route::get('/', function () {
 });
 
 Route::resource('biodata', BiodataController::class);
+// relasi one to one
+Route::get('relasi', [RelasiController::class, 'oneToOne']);
+Route::get('one-to-one', [RelasiController::class, 'oneToOne']);
+Route::get('/one-to-one', [RelasiController::class, 'oneToOne']);
+// one to many
+Route::get('/one-to-many', [RelasiController::class, 'oneToMany']);
+// tugass
+// routes/web.php
+use App\Models\Mahasiswa;
+
+Route::get('/mahasiswa-ke-dosen', function () {
+    $mhs = Mahasiswa::where('nim', '123456')->first();
+
+    return "{$mhs->nama} dibimbing oleh {$mhs->dosen->nama}";
+});
+// many to many
+// routes/web.php
+Route::get('/many-to-many', [RelasiController::class, 'manyToMany']);
+// many to many
+Route::get('/many-to-many', [RelasiController::class, 'manyToMany']);
+// one to one
+Route::get('eloquent', [RelasiController::class, 'eloquent']);
