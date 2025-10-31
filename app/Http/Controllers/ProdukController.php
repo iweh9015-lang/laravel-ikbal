@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produk;
 use Illuminate\Http\Request;
+use App\Models\Produk;
 
 class ProdukController extends Controller
 {
     public function index()
     {
-        $produk = Produk::latest()->paginate(5);
-
-        return view('produk.index', compact('produk'));
+        $produks = Produk::all();
+        return view('produk.index', compact('produks'));
     }
 
     public function create()
@@ -21,82 +20,44 @@ class ProdukController extends Controller
 
     public function store(Request $request)
     {
-        // validate form
-        $validated = $request->validate([
-            'nama' => 'required|min:5',
-            'harga' => 'required',
-            'image' => 'required|image|mimes:jpg,jpeg,png|max:1024',
-            'deskripsi' => 'required|min:10',
+        $request->validate([
+            'nama_produk' => 'required',
+            'harga' => 'required|numeric',
+            'stok' => 'required|integer',
         ]);
 
-        $produk = new Produk();
-        $produk->nama = $request->nama;
-        $produk->harga = $request->harga;
-        $produk->deskripsi = $request->deskripsi;
-        // upload image
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $randomName = \Str::random(20).'.'.$file->getClientOriginalExtension();
-            $path = $file->storeAs('produks', $randomName, 'public');
-            // memasukan nama image nya ke database
-            $produk->image = $path;
-        }
+        Produk::create($request->all());
 
-        $produk->save();
-
-        return redirect()->route('produk.index');
+        return redirect()->route('produk.index')->with('success', 'Data berhasil ditambahkan!');
     }
 
-    public function show($id)
+    public function show(Produk $produk)
     {
-        $produk = Produk::findOrFail($id);
-
         return view('produk.show', compact('produk'));
     }
 
-    public function edit($id)
+    public function edit(Produk $produk)
     {
-        $produk = Produk::findOrFail($id);
-
         return view('produk.edit', compact('produk'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Produk $produk)
     {
-        $validated = $request->validate([
-            'nama' => 'required|min:5',
-            'harga' => 'required',
-            'deskripsi' => 'required|min:10',
+        $request->validate([
+            'nama_produk' => 'required',
+            'harga' => 'required|numeric',
+            'stok' => 'required|integer',
         ]);
 
-        $produk = Produk::findOrFail($id);
-        $produk->nama = $request->nama;
-        $produk->harga = $request->harga;
-        $produk->deskripsi = $request->deskripsi;
+        $produk->update($request->all());
 
-        if ($request->hasFile('image')) {
-            // menghapus foto lama
-            \Storage::disk('public')->delete($produk->image);
-
-            // upload foto baru
-            $file = $request->file('image');
-            $randomName = \Str::random(20).'.'.$file->getClientOriginalExtension();
-            $path = $file->storeAs('produks', $randomName, 'public');
-            // memasukan nama image nya ke database
-            $produk->image = $path;
-        }
-
-        $produk->save();
-
-        return redirect()->route('produk.index');
+        return redirect()->route('produk.index')->with('success', 'Data berhasil diupdate!');
     }
 
-    public function destroy($id)
+    public function destroy(Produk $produk)
     {
-        $produk = Produk::findOrFail($id);
-        \Storage::disk('public')->delete($produk->image);
         $produk->delete();
 
-        return redirect()->route('produk.index');
+        return redirect()->route('produk.index')->with('success', 'Data berhasil dihapus!');
     }
 }

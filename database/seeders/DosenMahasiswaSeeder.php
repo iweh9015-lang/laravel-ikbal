@@ -1,23 +1,24 @@
 <?php
-// database/seeders/DosenMahasiswaSeeder.php
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Dosen;
-use App\Models\Mahasiswa;
+use Illuminate\Database\Seeder;
 
 class DosenMahasiswaSeeder extends Seeder
 {
-    public function run()
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
     {
         $dosen1 = Dosen::create([
             'nama' => 'Dr. Andi Nugraha',
-            'nipd' => 'D001'
+            'nipd' => 'D001',
         ]);
 
         $dosen2 = Dosen::create([
             'nama' => 'Prof. Siti Rahmawati',
-            'nipd' => 'D002'
+            'nipd' => 'D002',
         ]);
 
         // Tambahkan mahasiswa ke masing-masing dosen
@@ -32,4 +33,3 @@ class DosenMahasiswaSeeder extends Seeder
         ]);
     }
 }
-

@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <div class="card">
+            <div class="card">          
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <span>Data Dosen</span>
                     <a href="{{ route('dosen.create') }}" class="btn btn-sm btn-outline-primary">Tambah Dosen</a>

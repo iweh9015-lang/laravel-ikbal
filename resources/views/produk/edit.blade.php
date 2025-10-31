@@ -1,66 +1,165 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <div class="float-start">
-                        {{ __('Dashboard') }}
-                    </div>
-                    <div class="float-end">
-                        <a href="{{ route('produk.index') }}" class="btn btn-sm btn-outline-primary">Kembali</a>
-                    </div>
-                </div>
+<style>
+    body {
+        background: linear-gradient(135deg, #ffffffff 0%, #5e5e5eff 100%);
+        animation: moveGradient 6s ease infinite;
+        min-height: 100vh;
+        font-family: 'Poppins', sans-serif;
+    }
 
-                <div class="card-body">
-                    <form action="{{ route('produk.update', $produk->id) }}" method="POST" enctype="multipart/form-data">
-                        @method('put')
-                        @csrf
-                        <div class="mb-3">
-                            <label class="form-label">Nama Produk</label>
-                            <input type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" value="{{ $produk->nama }}" placeholder="produk Name" required>
-                            @error('nama')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Harga Produk</label>
-                            <input type="number" class="form-control @error('harga') is-invalid @enderror" name="harga" value="{{ $produk->harga }}" placeholder="Harga" required>
-                            @error('harga')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Deskripsi</label>
-                            <textarea class="form-control" class="form-control @error('deskirpsi') is-invalid @enderror" name="deskripsi" rows="3" placeholder="deskirpsi" required>{{ $produk->deskripsi }}</textarea>
-                            @error('deskirpsi')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
+    .container {
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
 
-                        <div class="mb-3">
-                            <label class="form-label">Image</label>
-                            <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" value="{{ $produk->image }}"></input>
-                            @error('image')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                        <button type="submit" class="btn btn-sm btn-primary">SIMPAN</button>
-                        <button type="reset" class="btn btn-sm btn-warning">RESET</button>
-                    </form>
-                </div>
-            </div>
+    .card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        background: #fff;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-header {
+        background: linear-gradient(270deg, #ffffffff, #00c6ff, #ffffffff);
+        background-size: 600% 600%;
+        font-weight: 600;
+        font-size: 1.1rem;
+        animation: moveGradient 6s ease infinite;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px 20px 0 0;
+    }
+
+    @keyframes moveGradient {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+
+    }
+
+
+    .btn-outline-primary {
+        border-radius: 10px;
+        transition: 0.3s;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #fff;
+        color: #007bff;
+        transform: scale(1.05);
+    }
+
+    .table {
+        border-collapse: separate;
+        border-spacing: 0 8px;
+        margin-top: 10px;
+    }
+
+    .table thead {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .table th {
+        text-align: center;
+        padding: 12px;
+        border: none;
+    }
+
+    .table td {
+        background-color: #fff;
+        text-align: center;
+        padding: 10px;
+        border-top: 1px solid #eee;
+    }
+
+    .table tbody tr {
+        transition: all 0.2s;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f8f9ff;
+        transform: scale(1.01);
+    }
+
+    .btn {
+        border-radius: 8px;
+        font-weight: 500;
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+        border: none;
+    }
+
+    .btn-info:hover {
+        background-color: #138496;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    footer {
+        margin-top: 40px;
+        text-align: center;
+        color: #777;
+        font-size: 14px;
+    }
+
+</style>
+
+<div class="container mt-4">
+    <h2>Edit Produk</h2>
+    <form action="{{ route('produk.update', $produc->id) }}" method="POST">
+        @csrf
+        @method('PUT')
+        <div class="mb-3">
+            <label>Nama Produk</label>
+            <input type="text" name="nama_produk" value="{{ $produc->nama_produk }}" class="form-control">
         </div>
-    </div>
+        <div class="mb-3">
+            <label>Harga</label>
+            <input type="number" name="harga" value="{{ $produc->harga }}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label>Stok</label>
+            <input type="number" name="stok" value="{{ $produc->stok }}" class="form-control">
+        </div>
+        <button class="btn btn-primary">Update</button>
+        <a href="{{ route('produk.index') }}" class="btn btn-secondary">Kembali</a>
+    </form>
 </div>
 @endsection
+

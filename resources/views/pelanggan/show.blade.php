@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
 <style>
     body {
@@ -94,13 +93,21 @@
 
 </style>
 
-<div class="container mt-4">
-    <h2>Detail Produk</h2>
-    <p><strong>ID:</strong> {{ $produc->id }}</p>
-    <p><strong>Nama Produk:</strong> {{ $produc->nama_produk }}</p>
-    <p><strong>Harga:</strong> {{ $produc->harga }}</p>
-    <p><strong>Stok:</strong> {{ $produc->stok }}</p>
-    <a href="{{ route('produk.index') }}" class="btn btn-secondary">Kembali</a>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">Detail Pelanggan</div>
+                <div class="card-body">
+                    <p><strong>Nama:</strong> {{ $pelanggan->nama }}</p>
+                    <td>{{ $pelanggan->telepon }}</td>
+                    <p><strong>Alamat:</strong> {{ $pelanggan->alamat }}</p>
+
+                    <a href="{{ route('pelanggan.index') }}" class="btn btn-secondary">Kembali</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 

@@ -1,12 +1,17 @@
 <?php
 
 use App\Http\Controllers\DosenController;
+use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MyController;
 use App\Http\Controllers\Postcontroller;
 use App\Http\Controllers\RelasiController;
+use App\Http\Controllers\WaliController;
+use App\Models\Mahasiswa;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+Route::resource('mahasiswa', MahasiswaController::class);
 
 Route::get('/', function () {
     return view('welcome');
@@ -177,7 +182,7 @@ Route::put('post/{id}', [Postcontroller::class, 'update'])->name('post.update');
 Route::get('post/{id}', [Postcontroller::class, 'show'])->name('post.show');
 
 // produk
-Route::resource('produk', App\Http\Controllers\ProdukController::class)->middleware('auth');
+Route::resource('produk', ProdukController::class)->middleware('auth');
 
 // dosen CRUD
 Route::resource('dosen', DosenController::class);
@@ -205,7 +210,6 @@ Route::get('/one-to-one', [RelasiController::class, 'oneToOne']);
 Route::get('/one-to-many', [RelasiController::class, 'oneToMany']);
 // tugass
 // routes/web.php
-use App\Models\Mahasiswa;
 
 Route::get('/mahasiswa-ke-dosen', function () {
     $mhs = Mahasiswa::where('nim', '123456')->first();
@@ -219,3 +223,15 @@ Route::get('/many-to-many', [RelasiController::class, 'manyToMany']);
 Route::get('/many-to-many', [RelasiController::class, 'manyToMany']);
 // one to one
 Route::get('eloquent', [RelasiController::class, 'eloquent']);
+// CRUD One To Many
+Route::resource('mahasiswa', MahasiswaController::class);
+// CRUD wali
+Route::resource('wali', WaliController::class);
+// CRUD pelanggan
+use App\Http\Controllers\PelangganController;
+
+Route::resource('pelanggan', PelangganController::class);
+// CRUD produk
+use App\Http\Controllers\ProdukController;
+
+Route::resource('produk', ProdukController::class);

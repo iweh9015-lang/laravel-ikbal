@@ -1,10 +1,7 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
-// Tambahkan ini
 
 class Hobi extends Model
 {

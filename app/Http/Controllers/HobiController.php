@@ -7,9 +7,12 @@ use Illuminate\Http\Request;
 
 class HobiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $hobis = Hobi::latest()->paginate(10);
+        $q = $request->get('q');
+        $hobis = Hobi::when($q, function ($query) use ($q) {
+            $query->where('nama_hobi', 'like', '%'.$q.'%');
+        })->latest()->paginate(10);
         return view('hobi.index', compact('hobis'));
     }
 
@@ -26,7 +29,7 @@ class HobiController extends Controller
 
         Hobi::create($validated);
 
-        return redirect()->route('hobi.index');
+        return redirect()->route('hobi.index')->with('success', 'Hobi berhasil ditambahkan');
     }
 
     public function show($id)
@@ -51,7 +54,7 @@ class HobiController extends Controller
 
         $hobi->update($validated);
 
-        return redirect()->route('hobi.index');
+        return redirect()->route('hobi.index')->with('success', 'Hobi berhasil diupdate');
     }
 
     public function destroy($id)
@@ -59,6 +62,6 @@ class HobiController extends Controller
         $hobi = Hobi::findOrFail($id);
         $hobi->delete();
 
-        return redirect()->route('hobi.index');
+        return redirect()->route('hobi.index')->with('success', 'Hobi berhasil dihapus');
     }
 }

@@ -1,12 +1,30 @@
 @extends('layouts.app')
-
 @section('content')
 <style>
     body {
-        background: linear-gradient(135deg, #ffffffff 0%, #5e5e5eff 100%);
+        background: linear-gradient(270deg, #ffffffff, #4586ffff);
+        background-size: 600% 600%;
+        font-weight: 600;
+        font-size: 1.1rem;
         animation: moveGradient 6s ease infinite;
-        min-height: 100vh;
-        font-family: 'Poppins', sans-serif;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px 20px 0 0;
+    }
+
+    @keyframes moveGradient {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+
     }
 
     .container {
@@ -29,7 +47,7 @@
     }
 
     .card-header {
-        background: linear-gradient(270deg, #ffffffff, #00c6ff, #ffffffff);
+        background: linear-gradient(270deg, #00a2ffff, #76a9e3ff);
         background-size: 600% 600%;
         font-weight: 600;
         font-size: 1.1rem;
@@ -140,25 +158,37 @@
 
 </style>
 
-<div class="container mt-4">
-    <h2>Tambah Produk</h2>
-    <form action="{{ route('produk.store') }}" method="POST">
-        @csrf
-        <div class="mb-3">
-            <label>Nama Produk</label>
-            <input type="text" name="nama_produk" class="form-control">
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">Edit Pelanggan</div>
+                <div class="card-body">
+                    <form action="{{ route('pelanggan.update', $pelanggan->id) }}" method="post">
+                        @csrf
+                        @method('PUT')
+                        <div class="mb-3">
+                            <label>Nama Pelanggan</label>
+                            <input type="text" name="nama" class="form-control" value="{{ $pelanggan->nama }}">
+                        </div>
+                        <div class="mb-3">
+                            <label>No Telp</label>
+                            <input type="text" name="no_telp" class="form-control" value="{{ $pelanggan->no_telp }}">
+                        </div>
+                        <div class="mb-3">
+                            <label>Alamat</label>
+                            <textarea name="alamat" class="form-control">{{ $pelanggan->alamat }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                        <a href="{{ route('pelanggan.index') }}" class="btn btn-secondary">Kembali</a>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="mb-3">
-            <label>Harga</label>
-            <input type="number" name="harga" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label>Stok</label>
-            <input type="number" name="stok" class="form-control">
-        </div>
-        <button class="btn btn-success">Simpan</button>
-        <a href="{{ route('produk.index') }}" class="btn btn-secondary">Kembali</a>
-    </form>
+    </div>
 </div>
 @endsection
 
