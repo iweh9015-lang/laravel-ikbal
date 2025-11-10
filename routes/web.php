@@ -235,3 +235,5 @@ Route::resource('pelanggan', PelangganController::class);
 use App\Http\Controllers\ProdukController;
 
 Route::resource('produk', ProdukController::class);
+// transaksi
+Route::resource('transaksi', App\Http\Controllers\TransaksiController::class)->middleware('auth');
