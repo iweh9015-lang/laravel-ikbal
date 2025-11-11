@@ -1,202 +1,64 @@
 @extends('layouts.app')
 
 @section('content')
-<style>
-    body {
-        background: linear-gradient(270deg, #ffffffff, #4586ffff);
-        background-size: 600% 600%;
-        font-weight: 600;
-        font-size: 1.1rem;
-        animation: moveGradient 6s ease infinite;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 20px 20px 0 0;
-    }
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="float-start">
+                        Data Produk
+                    </div>
+                    <div class="float-end">
+                        <a href="{{ route('produk.create') }}" class="btn btn-sm btn-outline-primary">Tambah Data</a>
+                    </div>
+                </div>
 
-    @keyframes moveGradient {
-        0% {
-            background-position: 0% 50%;
-        }
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama Produk</th>
+                                    <th>Harga</th>
+                                    <th>Stok</th>
 
-        50% {
-            background-position: 100% 50%;
-        }
-
-        100% {
-            background-position: 0% 50%;
-        }
-
-    }
-
-    .container {
-        margin-top: 40px;
-        margin-bottom: 40px;
-    }
-
-    .card {
-        border: none;
-        border-radius: 20px;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-        overflow: hidden;
-        background: #fff;
-        transition: all 0.3s ease-in-out;
-    }
-
-    .card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-    }
-
-    .card-header {
-        background: linear-gradient(270deg, #00a2ffff, #76a9e3ff);
-        background-size: 600% 600%;
-        font-weight: 600;
-        font-size: 1.1rem;
-        animation: moveGradient 6s ease infinite;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 20px 20px 0 0;
-    }
-
-    @keyframes moveGradient {
-        0% {
-            background-position: 0% 50%;
-        }
-
-        50% {
-            background-position: 100% 50%;
-        }
-
-        100% {
-            background-position: 0% 50%;
-        }
-
-    }
-
-
-    .btn-outline-primary {
-        border-radius: 10px;
-        transition: 0.3s;
-    }
-
-    .btn-outline-primary:hover {
-        background-color: #fff;
-        color: #007bff;
-        transform: scale(1.05);
-    }
-
-    .table {
-        border-collapse: separate;
-        border-spacing: 0 8px;
-        margin-top: 10px;
-    }
-
-    .table thead {
-        background-color: #007bff;
-        color: white;
-    }
-
-    .table th {
-        text-align: center;
-        padding: 12px;
-        border: none;
-    }
-
-    .table td {
-        background-color: #fff;
-        text-align: center;
-        padding: 10px;
-        border-top: 1px solid #eee;
-    }
-
-    .table tbody tr {
-        transition: all 0.2s;
-    }
-
-    .table tbody tr:hover {
-        background-color: #f8f9ff;
-        transform: scale(1.01);
-    }
-
-    .btn {
-        border-radius: 8px;
-        font-weight: 500;
-    }
-
-    .btn-info {
-        background-color: #17a2b8;
-        border: none;
-    }
-
-    .btn-info:hover {
-        background-color: #138496;
-    }
-
-    .btn-success {
-        background-color: #28a745;
-        border: none;
-    }
-
-    .btn-success:hover {
-        background-color: #218838;
-    }
-
-    .btn-danger {
-        background-color: #dc3545;
-        border: none;
-    }
-
-    .btn-danger:hover {
-        background-color: #c82333;
-    }
-
-    footer {
-        margin-top: 40px;
-        text-align: center;
-        color: #777;
-        font-size: 14px;
-    }
-
-</style>
-
-<div class="container mt-4">
-    <h2>Daftar Produk</h2>
-    <a href="{{ route('produk.create') }}" class="btn btn-primary mb-3">+ Tambah Produk</a>
-
-    @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nama Produk</th>
-                <th>Harga</th>
-                <th>Stok</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($producs as $p)
-            <tr>
-                <td>{{ $p->id }}</td>
-                <td>{{ $p->nama_produk }}</td>
-                <td>{{ $p->harga }}</td>
-                <td>{{ $p->stok }}</td>
-                <td>
-                    <a href="{{ route('produk.show', $p->id) }}" class="btn btn-info btn-sm">Show</a>
-                    <a href="{{ route('produk.edit', $p->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                    <form action="{{ route('produk.destroy', $p->id) }}" method="POST" style="display:inline">
-                        @csrf
-                        @method('DELETE')
-                        <button onclick="return confirm('Yakin hapus data?')" class="btn btn-danger btn-sm">Hapus</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php $no = 1; @endphp
+                                @forelse ($produk as $data)
+                                <tr>
+                                    <td>{{ $no++ }}</td>
+                                    <td>{{ $data->nama_produk }}</td>
+                                    <td>{!! $data->harga !!}</td>
+                                    <td>{{ $data->stok}}</td>
+                                    <td>
+                                        <form action="{{ route('produk.destroy', $data->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <a href="{{ route('produk.show', $data->id) }}" class="btn btn-sm btn-outline-dark">Show</a> |
+                                            <a href="{{ route('produk.edit', $data->id) }}" class="btn btn-sm btn-outline-success">Edit</a> |
+                                            <button type="submit" onsubmit="return confirm('Are You Sure ?');" class="btn btn-sm btn-outline-danger">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="6" class="text-center">
+                                        Data data belum Tersedia.
+                                    </td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                        {!! $produk->withQueryString()->links('pagination::bootstrap-4') !!}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
-

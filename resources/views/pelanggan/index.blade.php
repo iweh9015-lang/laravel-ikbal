@@ -178,18 +178,18 @@
                             <tr>
                                 <th>No</th>
                                 <th>Nama</th>
-                                <th>No Telp</th>
                                 <th>Alamat</th>
+                                <th>No Telp</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($pelanggans as $p)
+                            @foreach($pelanggan as $p)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $p->nama }}</td>
-                                <td>{{ $p->telepon }}</td>
-                                <td>{{ $p->alamat }}</td>
+                                <td>{{ $p->alamat }}</td> 
+                                <td>{{ $p->no_telepon }}</td>
                                 <td>
                                     <a href="{{ route('pelanggan.show', $p->id) }}" class="btn btn-primary btn-sm">👀</a> |
 

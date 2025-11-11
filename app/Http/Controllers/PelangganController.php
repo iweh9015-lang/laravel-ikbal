@@ -9,9 +9,9 @@ class PelangganController extends Controller
 {
     public function index()
     {
-        $pelanggans = Pelanggan::latest()->get();
+        $pelanggan = Pelanggan::all();
 
-        return view('pelanggan.index', compact('pelanggans'));
+        return view('pelanggan.index', compact('pelanggan'));
     }
 
     public function create()
@@ -19,50 +19,68 @@ class PelangganController extends Controller
         return view('pelanggan.create');
     }
 
-  public function store(Request $request)
-{
-    $request->validate([
-        'nama' => 'required',
-        'alamat' => 'required',
-        'telepon' => 'required', // pastikan ini ada
-    ]);
-
-    Pelanggan::create([
-        'nama' => $request->nama,
-        'alamat' => $request->alamat,
-        'telepon' => $request->telepon, // tambahkan ini
-    ]);
-
-    return redirect()->route('pelanggan.index')->with('success', 'Data berhasil disimpan!');
-}
-
-    public function show(Pelanggan $pelanggan)
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
     {
+        $request->validate([
+            'nama' => 'required',
+            'alamat' => 'required',
+            'no_telepon' => 'nullable',
+        ]);
+
+        Pelanggan::create([
+            'nama' => $request->nama,
+            'alamat' => $request->alamat,
+            'no_telepon' => $request->no_telepon,
+        ]);
+
+        return redirect()->route('pelanggan.index')->with('success', 'Pelanggan berhasil ditambahkan!');
+    }
+
+    public function show(string $id)
+    {
+        $pelanggan = Pelanggan::findOrFail($id);
+
         return view('pelanggan.show', compact('pelanggan'));
     }
 
-    public function edit(Pelanggan $pelanggan)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
     {
+        $pelanggan = Pelanggan::findOrFail($id);
+
         return view('pelanggan.edit', compact('pelanggan'));
     }
 
-    public function update(Request $request, Pelanggan $pelanggan)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
     {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'no_telp' => 'required|string|max:20',
-            'alamat' => 'required|string',
+        $validated = $request->validate([
+            'nama' => 'required',
+            'alamat' => 'required',
+            'no_telepon' => 'required',
         ]);
 
-        $pelanggan->update($request->all());
+        $pelanggan = Pelanggan::findOrFail($id);
+        $pelanggan->nama = $request->nama;
+        $pelanggan->alamat = $request->alamat;
+        $pelanggan->no_telepon = $request->no_telepon;
+        $pelanggan->save();
 
-        return redirect()->route('pelanggan.index')->with('success', 'Data pelanggan berhasil diperbarui!');
+        return redirect()->route('pelanggan.index');
     }
 
-    public function destroy(Pelanggan $pelanggan)
+    public function destroy(string $id)
     {
+        $pelanggan = Pelanggan::findOrFail($id);
         $pelanggan->delete();
 
-        return redirect()->route('pelanggan.index')->with('success', 'Data pelanggan berhasil dihapus!');
+        return redirect()->route('pelanggan.index');
     }
 }

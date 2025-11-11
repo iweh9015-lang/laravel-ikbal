@@ -2,33 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Transaksi extends Model
 {
-    use HasFactory;
-    protected $table = 'transaksi';
-
-    protected $fillable = [
-        'kode_transaksi',
-        'tanggal',
-        'pelanggan_id',
-        'total_harga',
-    ];
+    protected $fillable = ['kode_transaksi', 'id_pelanggan', 'id_produk', 'jumlah', 'total_harga'];
 
     public function pelanggan()
     {
-        return $this->belongsTo(Pelanggan::class);
+        return $this->belongsTo(Pelanggan::class, 'id_pelanggan');
     }
 
-    public function detailtransaksi()
+    // Relasi many-to-many ke produk lewat tabel pivot "detail_transaksi"
+    public function produks()
     {
-        return $this->hasMany(DetailTransaksi::class);
+        return $this->belongsToMany(Produk::class, 'detail_transaksi', 'id_transaksi', 'id_produk')
+            ->withPivot('jumlah', 'sub_total')
+            ->withTimestamps();
     }
 
     public function pembayaran()
     {
-        return $this->hasOne(Pembayaran::class);
+        return $this->hasOne(Pembayaran::class, 'id_transaksi');
     }
 }

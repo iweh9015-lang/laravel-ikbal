@@ -1,106 +1,28 @@
 @extends('layouts.app')
 
 @section('content')
-<style>
-    body {
-        background: linear-gradient(135deg, #ffffffff 0%, #395dffff 100%);
-        animation: moveGradient 6s ease infinite;
-        min-height: 100vh;
-        font-family: 'Poppins', sans-serif;
-    }
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>{{ __('Detail Produk') }}</span>
+                    <a href="{{ route('produk.index') }}" class="btn btn-sm btn-outline-primary">Kembali</a>
+                </div>
 
-    .container {
-        margin-top: 50px;
-        margin-bottom: 50px;
-    }
+                <div class="card-body">
+                    @if ($produk->image)
+                    <img src="{{ Storage::url($produk->image)  }}" class="w-100 rounded mb-3" alt="{{ $produk->nama }}">
+                    @else
+                    <img src="{{ asset('images/no-image.png') }}" class="w-100 rounded mb-3" alt="No Image">
+                    @endif
 
-    .card {
-        border: none;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        background: #fff;
-        overflow: hidden;
-        transition: all 0.3s ease-in-out;
-    }
-
-    .card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 14px 35px rgba(0, 0, 0, 0.12);
-    }
-
-    .card-header {
-        background: linear-gradient(90deg, #007bff, #67d9ffff);
-        animation: moveGradient 6s ease infinite;
-        color: white;
-        font-weight: 600;
-        font-size: 1.1rem;
-        padding: 15px 25px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .card-body {
-        padding: 30px;
-    }
-
-    .card-body h4 {
-        font-weight: 700;
-        color: #333;
-    }
-
-    .card-body p {
-        color: #555;
-        font-size: 16px;
-        margin-top: 10px;
-    }
-
-    .btn-outline-primary {
-        border-radius: 10px;
-        transition: 0.3s;
-    }
-
-    .btn-outline-primary:hover {
-        background-color: #fff;
-        color: #007bff;
-        transform: scale(1.05);
-    }
-
-    .info-box {
-        background: #f9fbff;
-        border-radius: 12px;
-        padding: 20px;
-        border-left: 5px solid #007bff;
-        margin-top: 20px;
-    }
-
-    .info-label {
-        font-weight: 600;
-        color: #007bff;
-        margin-bottom: 5px;
-    }
-
-    .info-value {
-        font-size: 17px;
-        color: #333;
-    }
-
-    footer {
-        text-align: center;
-        color: #888;
-        margin-top: 40px;
-        font-size: 14px;
-    }
-
-</style>
-
-<div class="container mt-4">
-    <h2>Detail Produk</h2>
-    <p><strong>ID:</strong> {{ $produc->id }}</p>
-    <p><strong>Nama Produk:</strong> {{ $produc->nama_produk }}</p>
-    <p><strong>Harga:</strong> {{ $produc->harga }}</p>
-    <p><strong>Stok:</strong> {{ $produc->stok }}</p>
-    <a href="{{ route('produk.index') }}" class="btn btn-secondary">Kembali</a>
+                    <h4 class="fw-bold">{{ $produk->nama }}</h4>
+                    <p class="mt-2 mb-1">Harga: <strong>Rp{{ number_format($produk->harga, 0, ',', '.') }}</strong></p>
+                    <p class="mt-2">{!! $produk->deskripsi !!}</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
-

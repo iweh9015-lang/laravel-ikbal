@@ -4,6 +4,7 @@ use App\Http\Controllers\DosenController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MyController;
 use App\Http\Controllers\Postcontroller;
+use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RelasiController;
 use App\Http\Controllers\WaliController;
 use App\Models\Mahasiswa;
@@ -228,12 +229,10 @@ Route::resource('mahasiswa', MahasiswaController::class);
 // CRUD wali
 Route::resource('wali', WaliController::class);
 // CRUD pelanggan
-use App\Http\Controllers\PelangganController;
-
-Route::resource('pelanggan', PelangganController::class);
-// CRUD produk
-use App\Http\Controllers\ProdukController;
-
-Route::resource('produk', ProdukController::class);
-// transaksi
-Route::resource('transaksi', App\Http\Controllers\TransaksiController::class)->middleware('auth');
+Route::prefix('latihan')->group(function () {
+    Route::get('transaksi/search', [App\Http\Controllers\TransaksiController::class, 'search'])->name('transaksi.search');
+    Route::resource('pelanggan', App\Http\Controllers\PelangganController::class);
+    Route::resource('produk', ProdukController::class);
+    Route::resource('transaksi', App\Http\Controllers\TransaksiController::class);
+    Route::resource('pembayaran', App\Http\Controllers\PembayaranController::class);
+})->middleware('auth');

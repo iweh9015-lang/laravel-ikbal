@@ -1,217 +1,135 @@
-
 @extends('layouts.app')
 
 @section('content')
-<style>
-    /* 🌈 Transaksi Style Level 50 */
+<div class="container">
+    <h3 class="mb-4">Edit Transaksi #{{ $transaksi->kode_transaksi }}</h3>
 
-    :root {
-        --primary: #6c63ff;
-        --secondary: #f3f4ff;
-        --accent: #00b894;
-        --danger: #ff7675;
-        --radius: 14px;
-        --transition: all 0.3s ease;
-        --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        --font-main: 'Poppins', sans-serif;
-    }
-
-    body {
-        font-family: var(--font-main);
-        background: linear-gradient(135deg, #f9faff, #f3f4ff);
-        min-height: 100vh;
-        padding: 40px;
-    }
-
-    /* Header */
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 25px;
-    }
-
-    .header h1 {
-        font-size: 2rem;
-        font-weight: 600;
-        color: #2d2d2d;
-    }
-
-    .btn-primary,
-    .btn-secondary {
-        padding: 10px 22px;
-        border-radius: var(--radius);
-        font-weight: 500;
-        border: none;
-        cursor: pointer;
-        transition: var(--transition);
-    }
-
-    .btn-primary {
-        background: var(--primary);
-        color: #fff;
-        box-shadow: var(--shadow);
-    }
-
-    .btn-primary:hover {
-        background: #5a54e0;
-        transform: translateY(-2px);
-    }
-
-    .btn-secondary {
-        background: #fff;
-        border: 2px solid var(--primary);
-        color: var(--primary);
-    }
-
-    .btn-secondary:hover {
-        background: var(--primary);
-        color: #fff;
-    }
-
-    /* Card Container */
-    .card {
-        background: #fff;
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-        padding: 30px;
-        animation: fadeIn 0.6s ease;
-    }
-
-    /* Form Elements */
-    .form-container {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .form-group label {
-        font-weight: 600;
-        color: #444;
-        margin-bottom: 6px;
-        display: block;
-    }
-
-    input,
-    select {
-        width: 100%;
-        padding: 12px 14px;
-        border-radius: var(--radius);
-        border: 1.8px solid #e2e2e2;
-        background: #f9f9ff;
-        transition: var(--transition);
-    }
-
-    input:focus,
-    select:focus {
-        border-color: var(--primary);
-        background: #fff;
-        outline: none;
-        box-shadow: 0 0 8px rgba(108, 99, 255, 0.2);
-    }
-
-    /* Produk Detail Box */
-    .produk-card {
-        background: var(--secondary);
-        border-radius: var(--radius);
-        padding: 16px 18px;
-        margin-bottom: 10px;
-        border: 1px solid #e2e2e2;
-        transition: var(--transition);
-    }
-
-    .produk-card:hover {
-        transform: scale(1.02);
-        background: #e9eaff;
-    }
-
-    /* Form Actions */
-    .form-actions {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 20px;
-    }
-
-    .alert {
-        padding: 15px;
-        border-radius: var(--radius);
-        color: #fff;
-        background: var(--danger);
-        margin-bottom: 20px;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(15px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-</style>
-
-<div class="header">
-    <h1>Edit Transaksi</h1>
-    <a href="{{ route('transaksi.index') }}" class="btn-primary">← Kembali</a>
-</div>
-
-<div class="card" style="padding: 30px; max-width: 850px; margin: 0 auto;">
+    {{-- Notifikasi Error --}}
     @if ($errors->any())
-    <div class="alert" style="background: var(--danger);">
-        <ul style="margin-left: 20px;">
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
+    <div class="alert alert-danger">
+        <strong>Terjadi kesalahan:</strong>
+        <ul class="mb-0">
+            @foreach ($errors->all() as $err)
+            <li>{{ $err }}</li>
             @endforeach
         </ul>
     </div>
     @endif
 
-    <form action="{{ route('transaksi.update', $transaksi->id) }}" method="POST" class="form-container">
+    <form action="{{ route('transaksi.update', $transaksi->id) }}" method="POST">
         @csrf
         @method('PUT')
 
-        <div class="form-group">
-            <label>Pelanggan</label>
-            <select name="pelanggan_id" required>
-                @foreach ($pelanggans as $pelanggan)
-                <option value="{{ $pelanggan->id }}" {{ $pelanggan->id == $transaksi->pelanggan_id ? 'selected' : '' }}>
-                    {{ $pelanggan->nama }}
+        {{-- Pilih Pelanggan --}}
+        <div class="mb-3">
+            <label for="id_pelanggan" class="form-label">Pelanggan</label>
+            <select name="id_pelanggan" id="id_pelanggan" class="form-select" required>
+                <option value="">-- Pilih Pelanggan --</option>
+                @foreach ($pelanggan as $p)
+                <option value="{{ $p->id }}" {{ $transaksi->id_pelanggan == $p->id ? 'selected' : '' }}>
+                    {{ $p->nama }}
                 </option>
                 @endforeach
             </select>
         </div>
 
-        <div class="form-group">
-            <label>Tanggal Transaksi</label>
-            <input type="date" name="tanggal" value="{{ $transaksi->tanggal }}" required>
-        </div>
+        <hr>
 
-        <div class="form-group">
-            <label>Detail Produk</label>
-            @foreach ($transaksi->detailtransaksi as $detail)
-            <div class="produk-card">
-                <p><strong>{{ $detail->prodak->nama }}</strong></p>
-                <p>Jumlah: {{ $detail->jumlah }}</p>
-                <p>Subtotal: Rp{{ number_format($detail->subtotal, 0, ',', '.') }}</p>
+        <h5>Daftar Produk</h5>
+
+        {{-- Wrapper Produk --}}
+        <div id="produk-wrapper">
+            @foreach ($transaksi->produks as $prodTrans)
+            <div class="row produk-item mb-3">
+                <div class="col-md-5">
+                    <label class="form-label">Produk</label>
+                    <select name="id_produk[]" class="form-select produk-select" required>
+                        <option value="">-- Pilih Produk --</option>
+                        @foreach ($produk as $prod)
+                        <option value="{{ $prod->id }}" data-harga="{{ $prod->harga }}" {{ $prodTrans->id == $prod->id ? 'selected' : '' }}>
+                            {{ $prod->nama_produk }} - Rp{{ number_format($prod->harga, 0, ',', '.') }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Jumlah</label>
+                    <input type="number" name="jumlah[]" class="form-control jumlah-input" min="1" value="{{ $prodTrans->pivot->jumlah }}" required>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Subtotal</label>
+                    <input type="text" class="form-control subtotal" readonly value="Rp{{ number_format($prodTrans->pivot->sub_total, 0, ',', '.') }}">
+                </div>
+
+                <div class="col-md-1 d-flex align-items-end">
+                    <button type="button" class="btn btn-danger btn-remove w-100">×</button>
+                </div>
             </div>
             @endforeach
         </div>
 
-        <div class="form-group">
-            <label>Total Harga</label>
-            <input type="text" value="Rp{{ number_format($transaksi->total_harga, 0, ',', '.') }}" readonly>
+        <div class="text-end mb-3">
+            <button type="button" class="btn btn-sm btn-secondary" id="btn-add">+ Tambah Produk</button>
         </div>
 
-        <div class="form-actions">
-            <button type="submit" class="btn-primary">💾 Simpan Perubahan</button>
-            <a href="{{ route('transaksi.index') }}" class="btn-secondary">Batal</a>
+        <div class="text-end mb-4">
+            <h5>Total Harga: <span id="totalHarga">Rp{{ number_format($transaksi->total_harga, 0, ',', '.') }}</span></h5>
+        </div>
+
+        <div class="text-end">
+            <button type="submit" class="btn btn-primary btn-sm">Update Transaksi</button>
         </div>
     </form>
 </div>
 
+{{-- SCRIPT --}}
+<script>
+    function hitungSubtotal() {
+        let total = 0;
+        document.querySelectorAll('.produk-item').forEach(item => {
+            let select = item.querySelector('.produk-select');
+            let jumlah = item.querySelector('.jumlah-input');
+            let subtotalInput = item.querySelector('.subtotal');
 
+            let harga = select.selectedOptions[0] ? .getAttribute('data-harga') || 0;
+            let sub = parseInt(harga) * parseInt(jumlah.value || 0);
+
+            subtotalInput.value = 'Rp' + sub.toLocaleString('id-ID');
+            total += sub;
+        });
+
+        document.getElementById('totalHarga').innerText = 'Rp' + total.toLocaleString('id-ID');
+    }
+
+    document.addEventListener('input', hitungSubtotal);
+    document.addEventListener('change', hitungSubtotal);
+
+    // Tambah produk baru
+    document.getElementById('btn-add').addEventListener('click', function() {
+        let wrapper = document.getElementById('produk-wrapper');
+        let newRow = wrapper.firstElementChild.cloneNode(true);
+
+        newRow.querySelectorAll('input').forEach(i => i.value = i.classList.contains('jumlah-input') ? 1 : 'Rp0');
+        newRow.querySelector('.produk-select').value = '';
+
+        wrapper.appendChild(newRow);
+        hitungSubtotal();
+    });
+
+    // Hapus produk
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-remove')) {
+            let items = document.querySelectorAll('.produk-item');
+            if (items.length > 1) {
+                e.target.closest('.produk-item').remove();
+                hitungSubtotal();
+            }
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', hitungSubtotal);
+
+</script>
 @endsection
